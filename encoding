@@ -1,0 +1,20 @@
+import pandas as pd
+import numpy as np
+d = {
+    'Category': ['Low', 'Medium', 'High', 'Medium', 'Low', 'High']
+}
+df = pd.DataFrame(d)
+def ordinal_encode(df, column, order):
+    mapping = {category: idx for idx, category in enumerate(order)}
+    df[column + '_Ordinal'] = df[column].map(mapping)
+    return df
+order = ['Low', 'Medium', 'High']
+df = ordinal_encode(df, 'Category', order)
+def one_hot_encode(df, column):
+    unique_values = df[column].unique()
+    for value in unique_values:
+        df[column + '_' + value] = np.where(df[column] == value, 1, 0)
+    df = df.drop(column, axis=1)
+    return df
+df = one_hot_encode(df, 'Category')
+print(df)
